@@ -17,107 +17,134 @@
     <link rel="stylesheet" href="assets/css/untitled.css?v=2.0">
 </head>
 
-<body id="page-top" style="font-size: 12px;">
+<body id="page-top" class="bg-light" style="font-family: 'Nunito', sans-serif;">
     <div id="wrapper" v-cloak>
 
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <?php include("partials/navbar.php"); ?>
-                <div class="container">
-                    <div
-                        class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex justify-content-center align-items-center">
-                        <img class="img-fluid me-2" src="assets/img/avatars/male_users.png" style="width: 32px;" />
-                        <h6 class="text-dark flex-fill mb-0"><strong>Attendance</strong></h6>
-                        <button class="btn btn-success btn-sm link-light"
-                            :class="route=='TO_SCHOOL'?'btn-success':'btn-info'" type="button" @click="changeRoute()">
-                            <div v-show="route=='TO_SCHOOL'">Going School <i class="fas fa-arrow-right"></i></div>
-                            <div v-show="route=='TO_HOME'"><i class="fas fa-arrow-left"></i> Going Home</div>
-                        </button>
+                <div class="container mt-4 mb-3">
+                    <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3">
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                        <i class="fas fa-users-cog text-primary fa-lg"></i>
+                                    </div>
+                                    <h5 class="text-dark fw-bold mb-0">Attendance</h5>
+                                </div>
+                                <button class="btn rounded-pill px-4 py-2 fw-bold shadow-sm"
+                                    :class="route=='TO_SCHOOL' ? 'btn-primary' : 'btn-info text-white'" 
+                                    type="button" @click="changeRoute()" style="transition: all 0.3s ease;">
+                                    <div v-show="route=='TO_SCHOOL'"><i class="fas fa-school me-2"></i>To School</div>
+                                    <div v-show="route=='TO_HOME'"><i class="fas fa-home me-2"></i>To Home</div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <div class="container-fluid">
+                <div class="container-fluid pb-5">
                     <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <ul class="list-group shadow-sm">
-                                <li v-for="student in studentsWithAttendance"
-                                    :class="student.attendance?.status=='PICKEDUP'?'list-group-item-warning':student.attendance?.status=='DROPPED'?'list-group-item-success':''"
-                                    class="list-group-item" role="button" data-bs-toggle="modal"
-                                    data-bs-target="#actionModal" @click="onSelectStudent(student)">
-                                    <img class="img-fluid me-3" src="assets/img/icons/male_user.png"
-                                        style="width: 32px;">
-                                    <span>{{student.student.full_name}}</span>
-                                </li>
-                            </ul>
+                        <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3">
+                            <div class="d-flex flex-column gap-3 px-2">
+                                <div v-for="student in studentsWithAttendance" 
+                                    :key="student.student_id"
+                                    class="card border-0 shadow-sm rounded-4 overflow-hidden" 
+                                    :class="student.attendance?.status=='PICKEDUP' ? 'bg-warning border-start border-5 border-warning bg-opacity-10' : (student.attendance?.status=='DROPPED' ? 'bg-success border-start border-5 border-success bg-opacity-10' : '')"
+                                    role="button" data-bs-toggle="modal" data-bs-target="#actionModal" 
+                                    @click="onSelectStudent(student)">
+                                    
+                                    <div class="card-body d-flex align-items-center p-3">
+                                        <div class="position-relative">
+                                            <img class="img-fluid rounded-circle shadow-sm bg-white p-1" src="assets/img/icons/male_user.png" style="width: 55px; height: 55px; object-fit: contain;">
+                                            <span v-if="student.attendance?.status=='PICKEDUP'" class="position-absolute bottom-0 start-50 translate-middle-x badge rounded-pill bg-warning text-dark border border-white" style="font-size: 0.55rem; transform: translateY(30%) translateX(-50%)!important;">PICKED</span>
+                                            <span v-if="student.attendance?.status=='DROPPED'" class="position-absolute bottom-0 start-50 translate-middle-x badge rounded-pill bg-success border border-white" style="font-size: 0.55rem; transform: translateY(30%) translateX(-50%)!important;">DROPPED</span>
+                                        </div>
+                                        
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-1 fw-bold text-dark" style="font-size: 1.1rem;">{{student.student.full_name}}</h6>
+                                            <small class="text-muted"><i class="fas fa-hand-pointer me-1 text-primary opacity-75"></i>Tap to update</small>
+                                        </div>
+                                        
+                                        <div class="ms-auto text-muted opacity-50">
+                                            <i class="fas fa-chevron-right fa-lg"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div v-if="studentsWithAttendance.length === 0" class="text-center py-5">
+                                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-users-slash fa-2x text-muted"></i>
+                                    </div>
+                                    <h5 class="text-muted fw-bold">No Students Assigned</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <a href="#" class="float z-1" @click="startScanning()" data-bs-target="#qrModal" data-bs-toggle="modal">
-            <i class="fa fa-qrcode my-float" style="color: rgb(255,255,255)"></i>
+        <a href="#" class="float z-1 bg-primary text-white border-0 shadow-lg d-flex justify-content-center align-items-center" @click="startScanning()" data-bs-target="#qrModal" data-bs-toggle="modal" style="width: 60px; height: 60px; border-radius: 50%; font-size: 24px;">
+            <i class="fa fa-qrcode"></i>
         </a>
 
         <div class="modal fade" role="dialog" tabindex="-1" id="actionModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">{{selectedStudent?.student?.full_name}}</h4><button class="btn-close"
-                            type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="modal-header bg-primary bg-opacity-10 border-0 pt-4 pb-3">
+                        <h5 class="modal-title fw-bold text-dark w-100 text-center">{{selectedStudent?.student?.full_name}}</h5>
+                        <button class="btn-close position-absolute top-0 end-0 mt-3 me-3" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body pb-4">
                         <div class="row">
                             <div class="col text-center" v-show="!showScanner">
-                                <img class="border rounded shadow-sm mb-3" src="assets/img/male_user128.png">
+                                <div class="d-inline-block position-relative mb-4 mt-2">
+                                    <img class="rounded-circle shadow-sm border border-3 border-white bg-light p-2" src="assets/img/male_user128.png" style="width: 100px; height: 100px;">
+                                </div>
                             </div>
-
                         </div>
-                        <div class="col text-center">
-                            <button class="btn btn-primary mx-1" type="button">Call&nbsp;<i
-                                    class="fas fa-phone-alt"></i></button>
+                        <div class="col text-center d-flex flex-column gap-3 px-4">
+                            <button class="btn btn-outline-primary rounded-pill py-3 fw-bold fs-6 shadow-sm d-flex align-items-center justify-content-center" type="button">
+                                <i class="fas fa-phone-alt me-2"></i> Call Parent
+                            </button>
                             <button @click="markAttendance('MANUAL')"
                                 v-show="selectedStudent?.attendance?.status!='DROPPED'"
-                                class="btn btn-success link-light mx-1" type="button">Mark&nbsp;<i
-                                    class="fa fa-check"></i></button>
+                                class="btn btn-success text-white rounded-pill py-3 fw-bold fs-6 shadow d-flex align-items-center justify-content-center" type="button">
+                                <i class="fas fa-check-circle me-2"></i> Mark Attendance
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer d-flex align-items-center"><button class="btn btn-secondary flex-fill"
-                            type="button" data-bs-dismiss="modal">Close</button></div>
                 </div>
             </div>
         </div>
 
 
         <div class="modal fade" role="dialog" tabindex="-1" id="qrModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Scan QR</h4><button class="btn-close" type="button" aria-label="Close"
-                            data-bs-dismiss="modal"></button>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="modal-header bg-dark text-white border-0 pt-4 pb-3">
+                        <h5 class="modal-title fw-bold w-100 text-center"><i class="fas fa-qrcode me-2"></i> Scan QR Code</h5>
+                        <button class="btn-close btn-close-white position-absolute top-0 end-0 mt-3 me-3" type="button" aria-label="Close" data-bs-dismiss="modal" @click="stopScanning"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body p-4 bg-light">
                         <div class="row">
                             <div class="col">
-                                <div id="reader"></div>
+                                <div id="reader" class="rounded-3 overflow-hidden shadow-sm border border-2 border-primary mb-3 bg-white"></div>
 
-                                <div id="result" class="mt-2">
+                                <div id="result" class="alert alert-info text-center fw-bold shadow-sm rounded-pill py-2 mb-4">
                                     {{qrMessage}}
                                 </div>
 
-                                <div class="text-center mt-2">
-                                    <button @click="stopScanning" class="btn btn-danger btn-sm">
-                                        Stop Scanner
+                                <div class="text-center">
+                                    <button @click="stopScanning" class="btn btn-danger rounded-pill px-5 py-3 fw-bold shadow d-inline-flex align-items-center justify-content-center w-100">
+                                        <i class="fas fa-times-circle me-2"></i> Stop Scanner
                                     </button>
                                 </div>
-                                <h5>{{qrCaptureValue}}</h5>
+                                <div class="text-center mt-3">
+                                    <span class="badge bg-secondary text-white rounded-pill px-3 py-2 fw-bold opacity-75">{{qrCaptureValue}}</span>
+                                </div>
                             </div>
-
-
                         </div>
-
                     </div>
-                    <div class="modal-footer d-flex align-items-center"><button class="btn btn-secondary flex-fill"
-                            type="button" data-bs-dismiss="modal">Close</button></div>
                 </div>
             </div>
         </div>
