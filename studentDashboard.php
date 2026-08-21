@@ -21,175 +21,119 @@
     <?php include("partials/linkCss.php"); ?>
 </head>
 
-<body id="page-top" style="font-size: 12px;">
+<body id="page-top" class="bg-light" style="font-family: 'Nunito', sans-serif;">
     <div id="wrapper" v-clock>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <?php include("partials/navbar.php"); ?>
-                <div class="container">
-                    <div
-                        class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex justify-content-center align-items-center">
-                        <h6 class="text-dark flex-fill mb-0"><strong>Student Dashboard</strong></h6><img
-                            class="img-fluid" src="assets/img/avatars/male_user128.png" style="width: 32px;">
-                    </div>
-                </div>
-                <hr>
-
-                <section v-if="tab=='Home'">
-                    <div class="container-fluid" data-aos="zoom-in-down" data-aos-once="true">
-                        <div class="row">
-                            <div class="col-md-6 offset-md-3">
-                                <div class="card shadow mb-4"">
-                                    <div class=" card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6 class="text-center">This Month</h6>
-                                        </div>
+                <div class="container mt-4 mb-3">
+                    <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3">
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body d-flex justify-content-between align-items-center p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                        <i class="fas fa-user-graduate text-primary fa-lg"></i>
                                     </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Current Status</th>
-                                                    <th class="text-end"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Picked up for Sctool</td>
-                                                    <td class="text-end"
-                                                        :class="attendanceStatus.pickedUpForSchool=='Pending'?'text-warning':'text-success'">
-                                                        <strong>{{attendanceStatus.pickedUpForSchool}}</strong>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Dropped to School</td>
-                                                    <td class="text-end"
-                                                        :class="attendanceStatus.droppedForSchool=='Pending'?'text-warning':'text-success'">
-                                                        <strong>{{attendanceStatus.droppedForSchool}}</strong>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Picked Up for Home</td>
-                                                    <td class="text-end"
-                                                        :class="attendanceStatus.pickedUpForHome=='Pending'?'text-warning':'text-success'">
-                                                        <strong>{{attendanceStatus.pickedUpForHome}}</strong>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Dropped to Home</td>
-                                                    <td class="text-end"
-                                                        :class="attendanceStatus.droppedForHome=='Pending'?'text-warning':'text-success'">
-                                                        <strong>{{attendanceStatus.droppedForHome}}</strong>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Attendance Summary</th>
-                                                    <th class="text-end"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Presents</td>
-                                                    <td class="text-end text-success"><strong>7/8</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Absent</td>
-                                                    <td class="text-end text-danger"><strong>1</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div> -->
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Cab Info</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Driver</td>
-                                                    <td class="text-end text-info">
-                                                        {{driver?.drivers?.users?.full_name ?? "Not Set"}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Vehicle Number</td>
-                                                    <td class="text-end text-info">
-                                                        <strong>{{driver?.drivers?.vehicle_number ?? "Not Set"}}</strong>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Driver Phone</td>
-                                                    <td class="text-end text-info">
-                                                        <strong>{{driver?.drivers?.users?.phone ?? "Not Set"}}</strong>
-                                                    </td>
-                                                </tr>
-                                                <tr v-show="driver?.drivers?.users?.phone">
-                                                    <td></td>
-                                                    <td class="text-end">
-                                                        <a :href="'tel:' + driver?.drivers?.users?.phone"
-                                                            class="btn btn-primary btn-sm" type="button">
-                                                            <i class="fas fa-phone-alt"></i> Call</a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                               
-                                                 <tr>
-                                                    <th>Payment Info - This Month</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                             <tr>
-                                                    <td>Monthly Fee</td>
-                                                    <td class="text-end">{{student.monthly_fee}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Status</td>
-                                                    <td class="text-end">
-                                                        <span
-                                                            :class="isPaymentDoneForCurrentMonth?'text-success':'text-warning'"><strong>{{isPaymentDoneForCurrentMonth?'Paid':'Pending'}}</strong></span>
-
-                                                    </td>
-                                                </tr>
-                                                
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <h5 class="text-dark fw-bold mb-0">Student Dashboard</h5>
                                 </div>
+                                <img class="img-fluid rounded-circle border border-2 border-primary shadow-sm bg-light" src="assets/img/avatars/male_user128.png" style="width: 45px; height: 45px; object-fit: cover;">
                             </div>
                         </div>
                     </div>
-            </div>
-            </section>
-            <section v-if="tab=='QR'" data-aos="zoom-in-down" data-aos-once="true">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="card shadow mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6 class="text-center mb-3">Student Scanner</h6>
+                </div>
+
+                <section v-if="tab=='Home'">
+                    <div class="container-fluid pb-5" data-aos="zoom-in-down" data-aos-once="true">
+                        <div class="row">
+                            <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex flex-column gap-3">
+                                
+                                <!-- Attendance Card -->
+                                <div class="card shadow-sm border-0 rounded-4">
+                                    <div class="card-header bg-white border-0 pt-3 pb-0">
+                                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-clock text-primary me-2"></i>Today's Attendance</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                                <span class="text-muted"><i class="fas fa-bus text-warning me-2"></i>Picked up for School</span>
+                                                <span class="badge rounded-pill fw-bold" :class="attendanceStatus.pickedUpForSchool=='Pending'?'bg-warning text-dark':'bg-success text-white'">{{attendanceStatus.pickedUpForSchool}}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                                <span class="text-muted"><i class="fas fa-school text-success me-2"></i>Dropped to School</span>
+                                                <span class="badge rounded-pill fw-bold" :class="attendanceStatus.droppedForSchool=='Pending'?'bg-warning text-dark':'bg-success text-white'">{{attendanceStatus.droppedForSchool}}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                                <span class="text-muted"><i class="fas fa-bus text-warning me-2"></i>Picked up for Home</span>
+                                                <span class="badge rounded-pill fw-bold" :class="attendanceStatus.pickedUpForHome=='Pending'?'bg-warning text-dark':'bg-success text-white'">{{attendanceStatus.pickedUpForHome}}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0">
+                                                <span class="text-muted"><i class="fas fa-home text-success me-2"></i>Dropped to Home</span>
+                                                <span class="badge rounded-pill fw-bold" :class="attendanceStatus.droppedForHome=='Pending'?'bg-warning text-dark':'bg-success text-white'">{{attendanceStatus.droppedForHome}}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Cab Info Card -->
+                                <div class="card shadow-sm border-0 rounded-4">
+                                    <div class="card-header bg-white border-0 pt-3 pb-0">
+                                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-car text-info me-2"></i>Cab & Driver Info</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-info bg-opacity-10 p-3 rounded-circle me-3">
+                                                <i class="fas fa-user-tie text-info fa-lg"></i>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-0 fw-bold text-dark">{{driver?.drivers?.users?.full_name ?? "Not Set"}}</h6>
+                                                <small class="text-muted">Assigned Driver</small>
+                                            </div>
+                                            <a v-if="driver?.drivers?.users?.phone" :href="'tel:' + driver?.drivers?.users?.phone" class="btn btn-outline-primary rounded-pill btn-sm px-3 shadow-sm">
+                                                <i class="fas fa-phone-alt me-1"></i> Call
+                                            </a>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center bg-light rounded-3 p-3">
+                                            <span class="text-muted">Vehicle Number</span>
+                                            <strong class="text-dark">{{driver?.drivers?.vehicle_number ?? "Not Set"}}</strong>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col text-center">
-                                            <canvas id="qrcode"></canvas>
+                                </div>
+
+                                <!-- Payment Info Card -->
+                                <div class="card shadow-sm border-0 rounded-4">
+                                    <div class="card-header bg-white border-0 pt-3 pb-0">
+                                        <h6 class="fw-bold text-dark mb-0"><i class="fas fa-rupee-sign text-success me-2"></i>Payment Status (This Month)</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="text-muted">Monthly Fee</span>
+                                            <strong class="fs-5 text-dark">₹{{student.monthly_fee}}</strong>
                                         </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-muted">Status</span>
+                                            <span class="badge rounded-pill px-3 py-2 fw-bold" :class="isPaymentDoneForCurrentMonth?'bg-success':'bg-warning text-dark'">
+                                                {{isPaymentDoneForCurrentMonth?'Paid':'Pending'}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+            </section>
+            <section v-if="tab=='QR'" data-aos="zoom-in-down" data-aos-once="true">
+                <div class="container-fluid pb-5">
+                    <div class="row">
+                        <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex flex-column gap-3">
+                            <div class="card shadow-sm border-0 rounded-4 text-center pb-4">
+                                <div class="card-header bg-white border-0 pt-4 pb-0">
+                                    <h5 class="fw-bold text-dark mb-1">Your Identity QR</h5>
+                                    <p class="text-muted small">Show this code to your driver</p>
+                                </div>
+                                <div class="card-body d-flex justify-content-center align-items-center">
+                                    <div class="bg-light p-3 rounded-4 border shadow-sm">
+                                        <canvas id="qrcode" class="rounded-3"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -198,37 +142,31 @@
                 </div>
             </section>
             <section v-if="tab=='Holidays'">
-                <div class="container-fluid" data-aos="zoom-in-down" data-aos-once="true">
+                <div class="container-fluid pb-5" data-aos="zoom-in-down" data-aos-once="true">
                     <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="card shadow mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6 class="text-center">Holidays this year</h6>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Event Name</th>
-                                                    <th class="text-end">Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="holiday in holidays">
-                                                    <td>{{holiday.event_name}}<div v-show="holiday.notes_name">
-                                                            <span>{{holiday.notes_name}}</span>
-                                                        </div>
-                                                    </td>
-
-                                                    <td class="text-end">{{holiday.holiday_date}}
-                                                        {{holiday.day_name}}</td>
-                                                </tr>
-
-                                            </tbody>
-                                        </table>
+                        <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex flex-column gap-3">
+                            <div class="card shadow-sm border-0 rounded-4">
+                                <div class="card-header bg-white border-0 pt-4 pb-2">
+                                    <h5 class="fw-bold text-dark mb-0"><i class="far fa-calendar-alt text-primary me-2"></i> Upcoming Holidays</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush rounded-4 overflow-hidden">
+                                        <li v-for="holiday in holidays" class="list-group-item d-flex justify-content-between align-items-center p-3 border-bottom">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3 text-center" style="min-width: 65px;">
+                                                    <span class="d-block fw-bold text-primary">{{holiday.holiday_date.split(' ')[0]}}</span>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-1 fw-bold text-dark">{{holiday.event_name}}</h6>
+                                                    <small class="text-muted" v-show="holiday.notes_name">{{holiday.notes_name}}</small>
+                                                </div>
+                                            </div>
+                                            <span class="badge bg-light text-dark border">{{holiday.day_name}}</span>
+                                        </li>
+                                    </ul>
+                                    <div v-if="!holidays.length" class="text-center py-5">
+                                        <i class="far fa-calendar-times fa-3x text-muted mb-3"></i>
+                                        <h6 class="text-muted fw-bold">No upcoming holidays</h6>
                                     </div>
                                 </div>
                             </div>
@@ -238,105 +176,90 @@
             </section>
 
             <section id="PaymentStatus" v-if="tab=='Payments'">
-                <div class="container-fluid" data-aos="zoom-in-down" data-aos-once="true">
+                <div class="container-fluid pb-5" data-aos="zoom-in-down" data-aos-once="true">
                     <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="card shadow mb-4">
+                        <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3 d-flex flex-column gap-3">
+                            
+                            <!-- Payment Status Card -->
+                            <div class="card shadow-sm border-0 rounded-4">
+                                <div class="card-header bg-white border-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+                                    <h5 class="fw-bold text-dark mb-0"><i class="fas fa-wallet text-success me-2"></i> Payment Status</h5>
+                                </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <h6 class="text-center">Payment Status</h6>
+                                    <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 mb-3">
+                                        <div>
+                                            <span class="text-muted d-block mb-1">Due Date</span>
+                                            <strong class="text-dark fs-5">10th of Month</strong>
+                                        </div>
+                                        <div class="text-end">
+                                            <span class="text-muted d-block mb-1">Status</span>
+                                            <span class="badge rounded-pill fw-bold bg-success px-3 py-2">Paid</span>
                                         </div>
                                     </div>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Status</th>
-                                                    <th class="text-end text-success">Paid</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody> <tr>
-                                                    <td colspan="2"><a class="btn btn-primary btn-sm" role="button" href="#myModal" data-bs-toggle="modal">+ New Payment</a></td>
-                                                   
-                                                </tr>
-                                                <tr>
-                                                    <td>Due Date</td>
-                                                    <td class="text-end text-info"><strong>2026-Jun-10</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <a class="btn btn-outline-success rounded-pill w-100 fw-bold py-2 shadow-sm" role="button" href="#myModal" data-bs-toggle="modal">
+                                        <i class="fas fa-plus-circle me-1"></i> New Payment
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Payment History Card -->
+                            <div class="card shadow-sm border-0 rounded-4">
+                                <div class="card-header bg-white border-0 pt-4 pb-2">
+                                    <h5 class="fw-bold text-dark mb-0"><i class="fas fa-history text-primary me-2"></i> Payment History</h5>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush rounded-bottom-4 overflow-hidden">
+                                        <li v-for="payment in paymentTimeline" class="list-group-item d-flex justify-content-between align-items-center p-3 border-bottom">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light p-2 rounded-3 me-3 text-center border">
+                                                    <i class="far fa-calendar-alt text-muted"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-dark">{{payment.monthYear}}</h6>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge rounded-pill" :class="payment.paid_at?'bg-success':'bg-warning text-dark'">
+                                                    {{payment.paid_at ? 'Paid: ' + payment.paid_at : payment.status}}
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div v-if="!paymentTimeline.length" class="text-center py-5">
+                                        <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                                        <h6 class="text-muted fw-bold">No payment history</h6>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 offset-md-3">
-                            <div class="card shadow mb-4">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col d-flex justify-content-center align-items-center">
-                                            <h6 class="text-start flex-fill m-0">Payment History</h6><i
-                                                class="far fa-clock"></i>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Month Year</th>
-                                                    <th class="text-end">Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="payment in paymentTimeline">
-                                                    <td>{{payment.monthYear}}</td>
-                                                    <td class="text-end" :class="payment.paid_at?'text-success':'text-warning'"><strong>{{payment.paid_at?payment.paid_at:payment.status}}</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
                 <?php include("partials/paymentQR.php"); ?>
-
             </section>
             <section id="Profile" v-if="tab=='Profile'">
                 <?php include("partials/studentProfile.php"); ?>
             </section>
 
-            <footer class="bg-white shadow fixed-bottom">
-                <div class="row" style="font-size:9px">
-                    <div class="col text-center d-flex justify-content-center p-0">
-                        <button style="font-size: 11px;" @click="tab='Home'" :class="tab=='Home'?'active':''"
-                            class="btn btn-light btn-sm border rounded-0 flex-fill py-2" type="button">
-                            <i class="fas fa-home"></i><br>Home
-                        </button>
+            <footer class="bg-white shadow-lg fixed-bottom border-top">
+                <div class="d-flex justify-content-around align-items-center py-2 pb-3 px-1">
+                    <div class="text-center flex-fill" role="button" @click="tab='Home'" :class="tab=='Home'?'text-primary fw-bold':'text-muted'">
+                        <i class="fas fa-home fs-5 d-block mb-1" :class="tab=='Home'?'fa-lg':''"></i>
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3px;">Home</span>
                     </div>
-                    <div class="col text-center d-flex justify-content-center p-0">
-                        <button style="font-size: 11px;" @click="showQR()" :class="tab=='QR'?'active':''"
-                            class="btn btn-light btn-sm border rounded-0 flex-fill py-2" type="button">
-                            <i class="fas fa-id-card"></i><br>QR
-                        </button>
+                    <div class="text-center flex-fill" role="button" @click="showQR()" :class="tab=='QR'?'text-primary fw-bold':'text-muted'">
+                        <i class="fas fa-qrcode fs-5 d-block mb-1" :class="tab=='QR'?'fa-lg':''"></i>
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3px;">QR Code</span>
                     </div>
-                    <div class="col text-center d-flex justify-content-center p-0">
-                        <button style="font-size: 11px;" @click="tab='Holidays'" :class="tab=='Holidays'?'active':''"
-                            class="btn btn-light btn-sm border rounded-0 flex-fill py-2" type="button">
-                            <i class="far fa-calendar-alt"></i><br>Holidays</button>
+                    <div class="text-center flex-fill" role="button" @click="tab='Holidays'" :class="tab=='Holidays'?'text-primary fw-bold':'text-muted'">
+                        <i class="far fa-calendar-alt fs-5 d-block mb-1" :class="tab=='Holidays'?'fa-lg':''"></i>
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3px;">Holidays</span>
                     </div>
-                    <div class="col text-center d-flex justify-content-center p-0">
-                        <button style="font-size: 11px;" @click="tab='Payments'" :class="tab=='Payments'?'active':''"
-                            class="btn btn-light btn-sm border rounded-0 flex-fill py-2" type="button"><i
-                                class="fas fa-rupee-sign"></i><br>Payments</button>
+                    <div class="text-center flex-fill" role="button" @click="tab='Payments'" :class="tab=='Payments'?'text-primary fw-bold':'text-muted'">
+                        <i class="fas fa-rupee-sign fs-5 d-block mb-1" :class="tab=='Payments'?'fa-lg':''"></i>
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3px;">Payments</span>
                     </div>
-                    <div class="col text-center d-flex justify-content-center p-0">
-                        <button style="font-size: 11px;" @click="tab='Profile'" :class="tab=='Profile'?'active':''"
-                            class="btn btn-light btn-sm border rounded-0 flex-fill py-2" type="button"><i
-                                class="fa fa-user"></i><br>Profile</button>
+                    <div class="text-center flex-fill" role="button" @click="tab='Profile'" :class="tab=='Profile'?'text-primary fw-bold':'text-muted'">
+                        <i class="far fa-user fs-5 d-block mb-1" :class="tab=='Profile'?'fa-lg':''"></i>
+                        <span style="font-size: 0.7rem; letter-spacing: 0.3px;">Profile</span>
                     </div>
                 </div>
             </footer>
@@ -370,7 +293,7 @@
             </div>
         </div>
     </div>
-    <div class="my-5"></div>
+    <div class="my-4 py-2"></div>
 
 
 
