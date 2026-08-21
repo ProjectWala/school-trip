@@ -92,22 +92,21 @@ else
 
     // Send email if account is pending confirmation
     if (isset($data['profileStatus']) && $data['profileStatus'] === 'PENDING_CONFIRMATION') {
+        require_once 'email-helper.php';
 
-        require_once 'brevo_mail_config.php';
-
-        $brevo = new BrevoMailer();
-        $id=$data['id'];
-        $mailResponse = $brevo->sendMail(
-            $email, // Send to user's email
-            'Projectwala',
-            'Account Confirmation Required',
-            '
+        $id = $data['id'];
+        $subject = 'Account Confirmation Required';
+        $body = '
             <h1>Account Pending Confirmation</h1>
             <p>Your account is currently pending confirmation.</p>
             <p>Please complete the verification process to activate your account.</p>
-            <p>Activation Link: https://mchfbsmlsgadpoawzwkk.supabase.co/functions/v1/confirm-student-email?student_id='.$id.'</p>'
+            <p>Activation Link: https://mchfbsmlsgadpoawzwkk.supabase.co/functions/v1/confirm-student-email?student_id='.$id.'</p>';
+
+        $mailResponse = Mailer::sendMail(
+            $email, // Send to user's email
+            $subject,
+            $body
         );
-        //print_r($mailResponse);return;
     }
 
     // Failure case
