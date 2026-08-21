@@ -19,7 +19,7 @@
 
 class BrevoMailer
 {
-    private $apiKey = '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';
+    private $apiKey = getenv('BREVO_API_KEY');
     private $senderEmail ='schooltrp3@gmail.com';
     private $senderName = 'Transport & Tracking';
 
