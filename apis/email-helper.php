@@ -14,12 +14,6 @@ require_once __DIR__ . '/libs/PHPMailer/src/SMTP.php';
 class Mailer
 {
 
-    private static string $host = 'smtp.gmail.com';
-    private static string $username = 'mohit.xxx@gmail.com';
-    private static string $password = 'uxvp cocd vdue jrnr';
-    private static string $fromEmail = 'mohit.xxx@gmail.com';
-    private static string $fromName = 'Mohit Sharma';
-
 
 
     /**
@@ -113,19 +107,23 @@ class Mailer
 
     private static function getMailer(): PHPMailer
     {
+        $envFile = dirname(__DIR__) . '/.env';
+        $env = file_exists($envFile) ? parse_ini_file($envFile) : [];
 
         $mail = new PHPMailer(true);
 
-
         $mail->isSMTP();
-        $mail->Host = self::$host;
+        $mail->Host = $env['SMTP_HOST'] ?? getenv('SMTP_HOST') ?: 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = self::$username;
-        $mail->Password = self::$password;
+        $mail->Username = $env['SMTP_USERNAME'] ?? getenv('SMTP_USERNAME') ?: '';
+        $mail->Password = $env['SMTP_PASSWORD'] ?? getenv('SMTP_PASSWORD') ?: '';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;
 
-        $mail->setFrom(self::$fromEmail, self::$fromName);
+        $mail->setFrom(
+            $env['SMTP_FROM_EMAIL'] ?? getenv('SMTP_FROM_EMAIL') ?: '',
+            $env['SMTP_FROM_NAME'] ?? getenv('SMTP_FROM_NAME') ?: ''
+        );
 
         $mail->isHTML(true);
 

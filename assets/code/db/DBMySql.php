@@ -2,8 +2,19 @@
 
 class DBMySql
 {
-    //public $servername = "localhost"; public $username = "root"; public $password = ""; public $dbname = "doctor_patient_chat";
-    public $servername = "mysql8002.site4now.net";    public $username = "a88a62_hlthmon";    public $password = "Freepwd123#";    public $dbname = "db_a88a62_hlthmon";
+    public $servername;
+    public $username;
+    public $password;
+    public $dbname;
+
+    public function __construct() {
+        $envFile = dirname(__DIR__, 3) . '/.env';
+        $env = file_exists($envFile) ? parse_ini_file($envFile) : [];
+        $this->servername = $env['DB_HOST'] ?? getenv('DB_HOST') ?: 'localhost';
+        $this->username = $env['DB_USERNAME'] ?? getenv('DB_USERNAME') ?: 'root';
+        $this->password = $env['DB_PASSWORD'] ?? getenv('DB_PASSWORD') ?: '';
+        $this->dbname = $env['DB_NAME'] ?? getenv('DB_NAME') ?: '';
+    }
 
     // Create New Database connection
     public function GetActiveConnection()

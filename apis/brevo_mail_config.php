@@ -19,12 +19,17 @@
 
 class BrevoMailer
 {
-    private $apiKey = getenv('BREVO_API_KEY');
-    private $senderEmail ='schooltrp3@gmail.com';
-    private $senderName = 'Transport & Tracking';
+    private $apiKey;
+    private $senderEmail;
+    private $senderName;
 
     public function __construct()
     {       
+        $envFile = dirname(__DIR__) . '/.env';
+        $env = file_exists($envFile) ? parse_ini_file($envFile) : [];
+        $this->apiKey = $env['BREVO_API_KEY'] ?? getenv('BREVO_API_KEY') ?: '';
+        $this->senderEmail = $env['BREVO_SENDER_EMAIL'] ?? getenv('BREVO_SENDER_EMAIL') ?: '';
+        $this->senderName = $env['BREVO_SENDER_NAME'] ?? getenv('BREVO_SENDER_NAME') ?: '';
     }
 
     public function sendMail($toEmail, $toName, $subject, $htmlContent)
