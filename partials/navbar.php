@@ -12,7 +12,6 @@ $user = isset($_SESSION['is_logged_in']) ? $_SESSION['user'] : null;
         <ul class="navbar-nav flex-nowrap ms-auto">
             <?php if (!$isLoggedIn) { ?>
                 <li class="nav-item dropdown no-arrow"><a class="nav-link" href="about-us.php">About</a></li>
-                <li class="nav-item dropdown no-arrow"><a class="nav-link" href="register.php">New User</a></li>
                 <li class="nav-item dropdown no-arrow"><a class="nav-link" href="login.php">Login</a></li>
             <?php } else { ?>
                 <div class="d-none d-sm-block topbar-divider"></div>

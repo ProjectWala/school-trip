@@ -28,16 +28,14 @@
                         <div class="card shadow-sm border-0 rounded-4">
                             <div class="card-body d-flex justify-content-between align-items-center p-3">
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                        <i class="fas fa-users-cog text-primary fa-lg"></i>
-                                    </div>
-                                    <h5 class="text-dark fw-bold mb-0">Attendance</h5>
+                                    
+                                    <h5 class="text-dark fw-bold mb-0">Route</h5>
                                 </div>
                                 <button class="btn rounded-pill px-4 py-2 fw-bold shadow-sm"
                                     :class="route=='TO_SCHOOL' ? 'btn-primary' : 'btn-info text-white'" 
                                     type="button" @click="changeRoute()" style="transition: all 0.3s ease;">
-                                    <div v-show="route=='TO_SCHOOL'"><i class="fas fa-school me-2"></i>To School</div>
-                                    <div v-show="route=='TO_HOME'"><i class="fas fa-home me-2"></i>To Home</div>
+                                    <div v-show="route=='TO_SCHOOL'"><i class="fas fa-school me-2"></i>Going To School</div>
+                                    <div v-show="route=='TO_HOME'"><i class="fas fa-home me-2"></i>Going To Home</div>
                                 </button>
                             </div>
                         </div>
@@ -199,22 +197,21 @@
 
                 },
                 async changeRoute() {
-                    if (this.route == 'TO_SCHOOL') {
-                        Swal.fire({
-                            title: "Route Changed !",
-                            text: "Route set to Home!",
-                            icon: "success"
-                        });
+                var msg = "Route set to Home!";
+                    if (this.route == 'TO_SCHOOL') {                        
                         this.route = 'TO_HOME';
+                        msg = "Route set to Home!";
                     }
                     else {
-                        Swal.fire({
-                            title: "Route Changed !",
-                            text: "Route set to School!",
-                            icon: "success"
-                        });
+                        msg = "Route set to School!";
                         this.route = 'TO_SCHOOL';
                     }
+                    Swal.fire({
+                            title: "Route Changed !",
+                            text: msg,
+                            icon: "success",
+                            timer: 1000
+                        });
                     supabaseHelper.getDriverStudentsWithAttendance(this.user.id, this.route).then((resp) => {
                         this.studentsWithAttendance = resp.data;
                     });

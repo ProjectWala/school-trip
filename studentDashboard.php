@@ -26,22 +26,7 @@
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <?php include("partials/navbar.php"); ?>
-                <div class="container mt-4 mb-3">
-                    <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3">
-                        <div class="card shadow-sm border-0 rounded-4">
-                            <div class="card-body d-flex justify-content-between align-items-center p-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                                        <i class="fas fa-user-graduate text-primary fa-lg"></i>
-                                    </div>
-                                    <h5 class="text-dark fw-bold mb-0">Student Dashboard</h5>
-                                </div>
-                                <img class="img-fluid rounded-circle border border-2 border-primary shadow-sm bg-light" src="assets/img/avatars/male_user128.png" style="width: 45px; height: 45px; object-fit: cover;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <section v-if="tab=='Home'">
                     <div class="container-fluid pb-5" data-aos="zoom-in-down" data-aos-once="true">
                         <div class="row">
@@ -217,9 +202,12 @@
                                                 <h6 class="mb-0 fw-bold text-dark">{{payment.monthYear}}</h6>
                                             </div>
                                             <div class="text-end">
-                                                <span class="badge rounded-pill" :class="payment.paid_at?'bg-success':'bg-warning text-dark'">
+                                                <span class="badge rounded-pill d-block mb-1" :class="payment.paid_at?'bg-success':'bg-warning text-dark'">
                                                     {{payment.paid_at ? 'Paid: ' + payment.paid_at : payment.status}}
                                                 </span>
+                                                <a v-if="payment.paid_at" :href="'receipt.php?month=' + payment.monthYear + '&paid_at=' + payment.paid_at" class="btn btn-sm btn-outline-primary rounded-pill" target="_blank" style="font-size: 0.75rem;">
+                                                    <i class="fas fa-file-invoice me-1"></i> Receipt
+                                                </a>
                                             </div>
                                         </li>
                                     </ul>
@@ -380,9 +368,30 @@
                     navigationService.goto('login.php');
                 }
 
+                if (window.location.hash) {
+                    const hashTab = window.location.hash.substring(1);
+                    const validTabs = ['Home', 'QR', 'Holidays', 'Payments', 'Profile'];
+                    if (validTabs.includes(hashTab)) {
+                        this.tab = hashTab;
+                    }
+                }
+
+                window.addEventListener('hashchange', () => {
+                    const hashTab = window.location.hash.substring(1);
+                    const validTabs = ['Home', 'QR', 'Holidays', 'Payments', 'Profile'];
+                    if (validTabs.includes(hashTab)) {
+                        this.tab = hashTab;
+                    }
+                });
+
                 this.$nextTick(() => {
                     AOS.refresh();
                 });
+            },
+            watch: {
+                tab(newTab) {
+                    window.location.hash = newTab;
+                }
             },
             data() {
                 return {

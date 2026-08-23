@@ -145,8 +145,8 @@
         const app = Vue.createApp({
             data() {
                 return {
-                    emailid: "student@gmail.com",
-                    password: "aa",
+                    emailid: "",
+                    password: "",
                     rememberMe: false,
                     loading: false,
                     errorMessage: "",
