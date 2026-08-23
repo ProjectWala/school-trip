@@ -75,6 +75,21 @@
                 display: none !important;
             }
         }
+        @media screen and (max-width: 768px) {
+            .receipt-container {
+                padding: 20px;
+                margin: 15px auto;
+            }
+            .receipt-title { font-size: 22px; }
+            .info-value { font-size: 0.95rem; }
+            .info-label { font-size: 0.75rem; }
+            h5.text-primary { font-size: 1.1rem; }
+            .table th { font-size: 0.75rem; padding: 0.5rem 0.25rem; }
+            .table td { font-size: 0.85rem; padding: 0.5rem 0.25rem; }
+            .total-row td { font-size: 1.1rem; }
+            .logo-img { max-height: 60px; }
+            p.text-muted { font-size: 0.85rem; }
+        }
     </style>
 </head>
 <body id="receipt-app">
@@ -196,7 +211,7 @@
                         margin:       0.5,
                         filename:     `receipt_${this.student.full_name}_${this.monthYear}.pdf`.replace(/\s+/g, '_'),
                         image:        { type: 'jpeg', quality: 0.98 },
-                        html2canvas:  { scale: 2 },
+                        html2canvas:  { scale: 2, windowWidth: 800 },
                         jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
                     };
                     

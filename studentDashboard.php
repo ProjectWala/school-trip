@@ -205,7 +205,7 @@
                                                 <span class="badge rounded-pill d-block mb-1" :class="payment.paid_at?'bg-success':'bg-warning text-dark'">
                                                     {{payment.paid_at ? 'Paid: ' + payment.paid_at : payment.status}}
                                                 </span>
-                                                <a v-if="payment.paid_at" :href="'receipt.php?month=' + payment.monthYear + '&paid_at=' + payment.paid_at" class="btn btn-sm btn-outline-primary rounded-pill" target="_blank" style="font-size: 0.75rem;">
+                                                <a v-if="payment.paid_at" :href="'receipt.php?month=' + payment.monthYear + '&paid_at=' + payment.paid_at" class="btn btn-sm btn-outline-primary rounded-pill" style="font-size: 0.75rem;">
                                                     <i class="fas fa-file-invoice me-1"></i> Receipt
                                                 </a>
                                             </div>
@@ -316,14 +316,11 @@
                     // debugger;
                 });
 
-                var data = { student_id: this.student.id };
-                supabaseHelper.getPaymentHistory(data).then((resp) => {
-                    debugger;
-                    this.payments = resp.data;
-                    console.log(this.payments);
+                const processPaymentsData = (paymentsData) => {
+                    this.payments = paymentsData || [];
                     const now = new Date();
                     const currentYear = now.getFullYear();
-                    const currentMonth = now.getMonth() + 1; // JavaScript months are 0-based
+                    const currentMonth = now.getMonth() + 1;
 
                     this.isPaymentDoneForCurrentMonth = this.payments.some(payment =>
                         payment.payment_year === currentYear &&
@@ -331,7 +328,17 @@
                     );
 
                     this.paymentTimeline = this.getPaymentTimeline(this.payments);
-                    console.log(this.paymentTimeline);
+                };
+
+                const savedPayments = await storageService.get('payments_' + this.student.id);
+                if (savedPayments) {
+                    processPaymentsData(savedPayments);
+                }
+
+                var data = { student_id: this.student.id };
+                supabaseHelper.getPaymentHistory(data).then(async (resp) => {
+                    processPaymentsData(resp.data);
+                    await storageService.set('payments_' + this.student.id, resp.data);
                 });
 
 
