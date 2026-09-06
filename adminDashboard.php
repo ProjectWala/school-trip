@@ -313,9 +313,7 @@
 
                 },
                 async makePaid() {
-
-
-                    Swal.fire({
+                    const result = await Swal.fire({
                         title: "Are you sure?",
                         text: "You won't be able to revert this!",
                         icon: "warning",
@@ -323,31 +321,30 @@
                         confirmButtonColor: "#3085d6",
                         cancelButtonColor: "#d33",
                         confirmButtonText: "Yes, Payment Done!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            var data = {
-                                "student_id": this.selectedStudent.student_id,
-                                "amount": this.paymentAmount,
-                                "payment_method": this.selectedPaymentMethod,
-                                "payment_month": this.selectedMonth,
-                                "payment_year": this.selectedYear
-                            }
-                            console.log(data);
-
-                            supabaseHelper.makePayment(data).then((resp) => {
-                                if (resp.success) {
-                                    Swal.fire({
-                                        title: "Done!",
-                                        text: "Record set to paid.",
-                                        icon: "success"
-                                    });
-                                    tools.closeModal('setPaidModal');
-                                    this.showPayments();
-
-                                }
-                            });
-                        }
                     });
+                    
+                    if (!result.isConfirmed) return;
+
+                    var data = {
+                        "student_id": this.selectedStudent.student_id,
+                        "amount": this.paymentAmount,
+                        "payment_method": this.selectedPaymentMethod,
+                        "payment_month": this.selectedMonth,
+                        "payment_year": this.selectedYear
+                    }
+                    console.log(data);
+
+                    var resp = await supabaseHelper.makePayment(data);
+                    if (resp.success) {
+                        tools.closeModal('setPaidModal');
+                        this.showPayments();
+                        await Swal.fire({
+                            title: "Done!",
+                            text: "Record set to paid.",
+                            icon: "success",                            
+                            timer: 1000
+                        });                                               
+                    }
                 },
                 showPayments() {
                     var params = {};

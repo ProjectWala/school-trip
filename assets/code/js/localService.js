@@ -1,4 +1,4 @@
-﻿import data from "../data/data.js";
+import data from "../data/data.js";
 var users = data.users;
 
 const userService = { login, getLoggedInUser, updateLoggedInUser, removeLoggedInUser, isLoggedIn };
@@ -397,7 +397,7 @@ class Validation {
         url: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
         username: /^[a-zA-Z0-9_]+$/,
         name: /^[a-zA-Z 0-9_]+$/,
-                mobile: /^[0-9]{10,15}$/,
+        mobile: /^[0-9]{10,15}$/,
         guid: /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[1-5][0-9a-fA-F]{3}\-[89abAB][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$/,
         password: {
             upper: /[A-Z]/,
@@ -412,7 +412,7 @@ class Validation {
         return this.patterns.email.test(email);
     }
 
-        isUrl(url) {
+    isUrl(url) {
         try {
             new URL(url);
             return true;
@@ -442,7 +442,7 @@ class Validation {
         return !value || value.trim().length === 0;
     }
 
-        // ✅ Email validation
+    // ✅ Email validation
     validateEmail(email, required = true) {
         let errors = [];
         if (required == false && this.isEmpty(email)) return errors;
@@ -457,7 +457,7 @@ class Validation {
         return errors;
     }
 
-        // ✅ Username validation
+    // ✅ Username validation
     validateUsername(username, required = true) {
         let errors = [];
 
@@ -476,7 +476,7 @@ class Validation {
         return errors;
     }
 
-        // ✅ Name validation
+    // ✅ Name validation
     validateName(name, required = true) {
         let errors = [];
 
@@ -494,7 +494,7 @@ class Validation {
 
         return errors;
     }
-        // ✅ Password validation (your improved version)
+    // ✅ Password validation (your improved version)
     validatePassword(password, required = true) {
         let errors = [];
 
@@ -538,7 +538,7 @@ class Validation {
         return [];
     }
 
-        // ✅ Phone number (basic)
+    // ✅ Phone number (basic)
     validateMobile(phone, required = true) {
         let errors = [];
 
@@ -601,7 +601,7 @@ class Tools {
             setTimeout(resolve, milliseconds);
         });
     }
-        closeModel(modalId) {
+    closeModal(modalId) {
         const modalEl = document.getElementById(modalId);
         const modal = bootstrap.Modal.getInstance(modalEl);
         modal?.hide();

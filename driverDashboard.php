@@ -264,7 +264,7 @@
                         }
 
                     });
-                    tools.closeModel("actionModal");
+                    tools.closeModal("actionModal");
                     supabaseHelper.getDriverStudentsWithAttendance(this.user.id, this.route).then((resp) => {
                         this.studentsWithAttendance = resp.data;
                     });
@@ -362,7 +362,7 @@
                         await this.markAttendance("QR");
 
                         // Close modal
-                        tools.closeModel("qrModal");
+                        tools.closeModal("qrModal");
 
                     }
                 },
