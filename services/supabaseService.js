@@ -21,6 +21,8 @@ URLs.getStudents = baseUrl + "functions/v1/get-students";
 URLs.getStudentDetails = baseUrl + "functions/v1/get-student-details";
 URLs.getActiveStudentsAttendance = baseUrl + "functions/v1/ ";
 URLs.getStudentAttendanceByDriverId = baseUrl + "functions/v1/get-student-attendance-by-driver-id";
+URLs.getStudentAttendanceByDriverIdAndDate = baseUrl + "functions/v1/get-student-attendance-by-driver-id-and-date";
+
 URLs.getAttendanceByStudentId = baseUrl + "functions/v1/get-student-attendance-by-student-id";
 
 URLs.getAssignedDriverByStudentId = baseUrl + "functions/v1/get-assigned-driver-info-by-student-id";
@@ -116,14 +118,24 @@ class SupabaseHelper {
     }
 
 
-    async getDriverStudentsWithAttendance(driverId, route) {
+    async getStudentAttendanceByDriverId(driverId, route, date = new Date().toLocaleDateString('en-CA')) {
 
         var token = await this.getToken();
         var supabase = createClient(baseUrl, anonKey);
 
         try {
+            const params = new URLSearchParams({
+                driver_id: driverId,
+                route: route,
+            });
+
+            if (date) {
+                params.append("date", date);
+                params.append("attendance_date", date);
+            }
+
             const response = await fetch(
-                `${URLs.getStudentAttendanceByDriverId}?driver_id=${driverId}&route=${route}`,
+                `${URLs.getStudentAttendanceByDriverIdAndDate}?${params.toString()}`,
                 {
                     method: "GET",
                     headers: {
@@ -141,7 +153,7 @@ class SupabaseHelper {
 
             return data;
         } catch (error) {
-            console.error("getDriverStudentsWithAttendance error:", error);
+            console.error("getStudentAttendanceByDriverId error:", error);
 
             return {
                 success: false,
@@ -149,6 +161,10 @@ class SupabaseHelper {
                 data: [],
             };
         }
+    }
+
+    async getDriverStudentsWithAttendance(driverId, route, date = new Date().toLocaleDateString('en-CA')) {
+        return this.getStudentAttendanceByDriverId(driverId, route, date);
     }
     async getAttendanceByStudentId(studentId, route = null, attendanceDate = null) {
         var token = await this.getToken();
@@ -810,6 +826,43 @@ class SupabaseHelper {
         } catch (error) {
             console.error("getDrivers error:", error);
 
+            return {
+                success: false,
+                error: error.message,
+                data: [],
+            };
+        }
+    }
+
+    async getAttendanceForStudentsByDate(studentIds, date) {
+        if (!studentIds || studentIds.length === 0) {
+            return { success: true, data: [] };
+        }
+        try {
+            const idFilter = studentIds.join(',');
+            const response = await fetch(
+                `${baseUrl}rest/v1/attendance?attendance_date=eq.${date}&student_id=in.(${idFilter})&select=*`,
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${anonKey}`,
+                        apikey: anonKey,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || data.error || "Failed to fetch attendance history");
+            }
+
+            return {
+                success: true,
+                data: data || [],
+            };
+        } catch (error) {
+            console.error("getAttendanceForStudentsByDate error:", error);
             return {
                 success: false,
                 error: error.message,

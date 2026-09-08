@@ -653,13 +653,52 @@ export const helperService = {
         return "just now";
     }
 }
+
+class GeoTools {
+    calculateDistance(lat1, lon1, lat2, lon2) {
+        if (!lat1 || !lon1 || !lat2 || !lon2) return 0;
+        const R = 6371; // Radius of the earth in km
+        const dLat = this.deg2rad(lat2 - lat1);
+        const dLon = this.deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c; // Distance in km
+        return d * 1000; // Distance in meters
+    }
+
+    deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+
+    getCurrentLocation() {
+        return new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+                reject(new Error("Geolocation is not supported by your browser"));
+            } else {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }),
+                    (error) => reject(error),
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            }
+        });
+    }
+}
+
 const productService = new Product();
 const sound = new Sound();// { playBuzzer, playSiren };
 const validations = new Validation();
 const emailService = new Eamil();
 const storageService = new LocalStorage();
 const tools = new Tools();
-const services = { userService, productService, storageService, emailService, sound, tools };
+const geoTools = new GeoTools();
+const services = { userService, productService, storageService, emailService, sound, tools, geoTools };
 
 export default services;
-export { userService, productService, storageService, emailService, sound, validations, tools };
+export { userService, productService, storageService, emailService, sound, validations, tools, geoTools };
