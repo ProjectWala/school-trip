@@ -163,9 +163,6 @@ class SupabaseHelper {
         }
     }
 
-    async getDriverStudentsWithAttendance(driverId, route, date = new Date().toLocaleDateString('en-CA')) {
-        return this.getStudentAttendanceByDriverId(driverId, route, date);
-    }
     async getAttendanceByStudentId(studentId, route = null, attendanceDate = null) {
         var token = await this.getToken();
         var supabase = createClient(baseUrl, anonKey);

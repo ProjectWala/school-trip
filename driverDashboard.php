@@ -54,7 +54,24 @@
                     <div class="container-fluid pb-5 mb-4">
                         <div class="row">
                             <div class="col-md-8 col-xl-6 offset-md-2 offset-xl-3">
-                                <div class="d-flex flex-column gap-3 px-2">
+                                <!-- Loading State -->
+                                <div v-if="attendanceLoading" class="text-center py-5">
+                                    <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;">
+                                        <span class="visually-hidden">Loading students...</span>
+                                    </div>
+                                    <p class="text-muted fw-semibold mt-2">Loading students attendance...</p>
+                                </div>
+
+                                <!-- Empty State (No Students Assigned) -->
+                                <div v-else-if="studentsWithAttendance.length === 0" class="text-center py-5">
+                                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-users-slash fa-2x text-muted"></i>
+                                    </div>
+                                    <h5 class="text-muted fw-bold">No Students Assigned</h5>
+                                </div>
+
+                                <!-- Students List -->
+                                <div v-else class="d-flex flex-column gap-3 px-2">
                                     <div v-for="student in studentsWithAttendance" 
                                         :key="student.student_id"
                                         class="card border-0 shadow-sm rounded-4 overflow-hidden" 
@@ -90,12 +107,6 @@
                                                 <i v-else class="fas fa-chevron-right fa-lg"></i>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div v-if="studentsWithAttendance.length === 0" class="text-center py-5">
-                                        <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 80px; height: 80px;">
-                                            <i class="fas fa-users-slash fa-2x text-muted"></i>
-                                        </div>
-                                        <h5 class="text-muted fw-bold">No Students Assigned</h5>
                                     </div>
                                 </div>
                             </div>
@@ -211,9 +222,12 @@
                     navigationService.goto('login.php');
                     return;
                 }
+                this.attendanceLoading = true;
                 supabaseHelper.getStudentAttendanceByDriverId(this.user.id, this.route).then((resp) => {
                     this.studentsWithAttendance = resp.data || [];
                     this.assignedStudents = resp.data || [];
+                }).finally(() => {
+                    this.attendanceLoading = false;
                 });
                 console.log(this.studentsWithAttendance);
             },
@@ -222,6 +236,7 @@
                     user: {},
                     studentsWithAttendance: [],
                     assignedStudents: [],
+                    attendanceLoading: false,
                     historyStudentsList: [],
                     historyLoading: false,
                     activeTab: 'attendance',
@@ -328,7 +343,7 @@
                     this.historyLoading = true;
                     try {
                         if (!this.assignedStudents.length) {
-                            const resp = await supabaseHelper.getDriverStudentsWithAttendance(this.user.id, "TO_SCHOOL");
+                            const resp = await supabaseHelper.getStudentAttendanceByDriverId(this.user.id, "TO_SCHOOL");
                             if (resp && resp.data) {
                                 this.assignedStudents = resp.data;
                             }
@@ -426,8 +441,11 @@
                             icon: "success",
                             timer: 1000
                         });
-                    supabaseHelper.getDriverStudentsWithAttendance(this.user.id, this.route).then((resp) => {
-                        this.studentsWithAttendance = resp.data;
+                    this.attendanceLoading = true;
+                    supabaseHelper.getStudentAttendanceByDriverId(this.user.id, this.route).then((resp) => {
+                        this.studentsWithAttendance = resp.data || [];
+                    }).finally(() => {
+                        this.attendanceLoading = false;
                     });
 
                 },
@@ -523,7 +541,7 @@ debugger;
 
                     });
                     tools.closeModal("actionModal");
-                    supabaseHelper.getDriverStudentsWithAttendance(this.user.id, this.route).then((resp) => {
+                    supabaseHelper.getStudentAttendanceByDriverId(this.user.id, this.route).then((resp) => {
                         this.studentsWithAttendance = resp.data || [];
                         this.assignedStudents = resp.data || [];
                         if (this.isHistoryDateToday(this.selectedHistoryDate)) {
